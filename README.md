@@ -1,5 +1,7 @@
 # Smart Water Quality Monitoring Using IoT & Machine Learning
 
+![IoT Water Quality Monitoring](image/IoT_water_quality.png)
+
 ## Project Overview
 
 This project implements a Smart Water Quality Monitoring System using real IoT sensor data from multiple river monitoring stations in Queensland, Australia. The system leverages machine learning to:
@@ -147,20 +149,10 @@ See the IoT System Design section in the project report for detailed documentati
 - Cloud data processing pipeline
 - Machine learning integration
 
-## Team Members
-
-- [Team Member 1]
-- [Team Member 2]
-
-## Course Information
-
-- **Course**: AAI-530 Machine Learning for IoT
-- **Institution**: University of San Diego
-- **Semester**: [Current Semester]
 
 ## License
 
-This project is for educational purposes as part of the AAI-530 course requirements.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## References
 
