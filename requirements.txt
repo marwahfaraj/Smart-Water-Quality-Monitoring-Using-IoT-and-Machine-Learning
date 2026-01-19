@@ -1,0 +1,35 @@
+# Smart Water Quality Monitoring - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core Data Processing
+pandas
+numpy
+
+# Data Visualization
+matplotlib
+seaborn
+plotly
+
+# Machine Learning - Deep Learning (TensorFlow includes Keras)
+tensorflow
+
+# Machine Learning - Traditional ML
+scikit-learn
+
+# Jupyter Notebooks
+jupyter
+notebook
+ipykernel
+
+# Data Export and Utilities
+openpyxl
+
+# Progress Bar
+tqdm
+
+# Date/Time handling
+python-dateutil
+
+# Statistical Analysis
+scipy
+statsmodels

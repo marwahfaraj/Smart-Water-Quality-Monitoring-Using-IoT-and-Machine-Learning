@@ -1,0 +1,9 @@
+Metric,Value
+Accuracy,0.9997200447928332
+Precision,0.9997202338240331
+Recall,0.9997200447928332
+F1-Score,0.9997199413910242
+Total Samples,7144.0
+Safe Count,3254.0
+Warning Count,2962.0
+Unsafe Count,928.0
