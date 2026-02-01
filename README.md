@@ -375,7 +375,7 @@ The Tableau Public dashboard visualizes:
 4. **Safety Classification** - Distribution of Safe/Warning/Unsafe readings by station
 5. **Alert History** - Timeline of threshold breaches
 
-**Dashboard Link**: [Tableau Public Dashboard](https://public.tableau.com/your-dashboard-link)
+**Dashboard Link**: [Tableau Public Dashboard](https://public.tableau.com/your-dashboard-link) [AS OF NOW, THIS IS A PLACEHOLDER]
 
 ---
 
