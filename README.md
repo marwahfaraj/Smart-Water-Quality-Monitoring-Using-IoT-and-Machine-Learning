@@ -399,7 +399,7 @@ The Tableau Public dashboard visualizes:
 | `lstm_daily_metrics.csv` | Daily aggregated prediction metrics |
 | `classification_results.csv` | Classification predictions with probabilities |
 | `classification_summary.csv` | Summary metrics (accuracy, precision, recall, F1) |
-| `time_series_model_comparison.png` | R² and RMSE comparison across time series models |
+| `turbidity_model_comparison.png` | R² and RMSE comparison across turbidity prediction models |
 | `classification_model_comparison.png` | Accuracy comparison across classification models |
 | `per_class_performance.png` | Per-class recall analysis for safety monitoring |
 | `*.png` | Additional visualization plots |
