@@ -37,8 +37,11 @@ Smart-Water-Quality-Monitoring/
 │
 ├── notebooks/
 │   ├── 01_data_exploration_and_cleaning.ipynb   # EDA and data preprocessing
-│   ├── 02_lstm_turbidity_prediction.ipynb       # Deep learning time series model
-│   └── 03_water_quality_classification.ipynb    # Classification model
+│   ├── 02_lstm_turbidity_prediction.ipynb       # LSTM time series model (Original)
+│   ├── 03_water_quality_classification.ipynb    # Random Forest classification (Original)
+│   ├── 04_water_quality_prediction.ipynb        # GRU time series model (Surya)
+│   ├── 05_water_quality_models_birendra.ipynb   # LSTM + RF models (Birendra)
+│   └── 06_model_comparison.ipynb                # Model comparison analysis
 │
 ├── src/
 │   ├── data_processing.py                 # Data loading and cleaning utilities
@@ -168,61 +171,61 @@ Real-time water quality measurements from **11 IoT monitoring stations** operate
 
 ## Machine Learning Models
 
-### Model 1: LSTM Turbidity Prediction
+This project implements multiple machine learning models to demonstrate methodological rigor and identify the best approach for each task.
 
-**Objective:** Predict water turbidity 24 hours ahead using historical sensor data.
+### Model Comparison Summary
+
+#### Time Series Prediction (Turbidity Forecasting)
+
+| Model | Architecture | Lookback | Forecast | R² Score | Status |
+|-------|-------------|----------|----------|----------|--------|
+| **LSTM (Birendra)** | 128→64 units, Huber loss | 24 hours | 12 hours | **0.632** | ✓ Selected |
+| LSTM (Original) | 64→32 units, MSE loss | 48 hours | 24 hours | 0.489 | Baseline |
+| GRU (Surya) | 64→32 units, MSE loss | 24 hours | 24 hours | 0.110 | Comparison |
+
+#### Classification (Water Quality Status)
+
+| Model | Accuracy | Precision | Recall | F1-Score | Status |
+|-------|----------|-----------|--------|----------|--------|
+| **Random Forest (Original)** | **99.97%** | 99.97% | 99.97% | 99.97% | ✓ Selected |
+| Random Forest (Birendra) | 88.29% | 87% | 88% | 88% | Comparison |
+
+---
+
+### Selected Model 1: LSTM Turbidity Prediction (Birendra)
+
+**Objective:** Predict water turbidity 12 hours ahead using historical sensor data.
 
 #### Architecture
 
 ```
-Input (48, 3) → LSTM(64) → Dropout(0.2) → LSTM(32) → Dropout(0.2) → Dense(16) → Output(1)
+Input (24, 19) → LSTM(128) → Dropout(0.2) → LSTM(64) → Dropout(0.2) → Dense(32) → Output(1)
 ```
 
 | Component | Specification |
 |-----------|---------------|
 | **Model Type** | 2-Layer Stacked LSTM (built from scratch) |
 | **Framework** | TensorFlow/Keras |
-| **Input Shape** | (48, 3) - 48 hours × 3 features |
-| **LSTM Layer 1** | 64 units, return_sequences=True, tanh activation |
-| **LSTM Layer 2** | 32 units, return_sequences=False |
+| **Input Shape** | (24, 19) - 24 hours × 19 features |
+| **LSTM Layer 1** | 128 units, return_sequences=True |
+| **LSTM Layer 2** | 64 units, return_sequences=False |
 | **Dropout Rate** | 0.2 (both layers) |
-| **Dense Hidden** | 16 units, ReLU activation |
+| **Dense Hidden** | 32 units, ReLU activation |
 | **Output Layer** | 1 unit, Linear activation |
 | **Optimizer** | Adam (learning_rate=0.001) |
-| **Loss Function** | Mean Squared Error (MSE) |
+| **Loss Function** | Huber Loss (robust to outliers) |
 
-#### Input Features
+#### Performance Metrics
 
-| Feature | Description | Preprocessing |
-|---------|-------------|---------------|
-| Turbidity | Historical turbidity values | MinMax scaling (0-1) |
-| Conductivity | Historical conductivity | MinMax scaling (0-1) |
-| Temperature | Historical temperature | MinMax scaling (0-1) |
-
-#### Training Configuration
-
-| Parameter | Value |
-|-----------|-------|
-| **Sequence Length** | 48 hours (lookback window) |
-| **Forecast Horizon** | 24 hours ahead |
-| **Train/Val/Test Split** | 70% / 15% / 15% (sequential, not random) |
-| **Batch Size** | 32 |
-| **Max Epochs** | 100 |
-| **Early Stopping** | Patience=10, restore_best_weights=True |
-| **Learning Rate Reduction** | Factor=0.5, Patience=5, min_lr=0.0001 |
-
-#### Evaluation Metrics
-
-| Metric | Description | Target |
-|--------|-------------|--------|
-| **MSE** | Mean Squared Error | Minimize |
-| **RMSE** | Root Mean Squared Error | < 7 NTU |
-| **MAE** | Mean Absolute Error | < 5 NTU |
-| **R² Score** | Coefficient of Determination | > 0.80 |
+| Metric | Value |
+|--------|-------|
+| **R² Score** | 0.632 |
+| **RMSE** | 13.47 NTU |
+| **MAE** | 3.80 NTU |
 
 ---
 
-### Model 2: Water Quality Classification
+### Selected Model 2: Water Quality Classification (Original)
 
 **Objective:** Classify water quality status as Safe/Warning/Unsafe for automated alerting.
 
@@ -262,24 +265,25 @@ Input (48, 3) → LSTM(64) → Dropout(0.2) → LSTM(32) → Dropout(0.2) → De
 | **Warning** | 23.2% | At least one parameter in warning zone |
 | **Unsafe** | 10.1% | At least one parameter exceeds safe limits |
 
-#### Training Configuration
+#### Overall Performance
 
-| Parameter | Value |
-|-----------|-------|
-| **Train/Test Split** | 80% / 20% |
-| **Stratification** | Yes (maintains class distribution) |
-| **Feature Scaling** | StandardScaler |
-| **Cross-Validation** | 5-fold |
+| Metric | Value |
+|--------|-------|
+| **Accuracy** | 99.97% |
+| **Precision** | 99.97% |
+| **Recall** | 99.97% |
+| **F1-Score** | 99.97% |
+| **Cross-Validation Score** | 92% |
 
-#### Evaluation Metrics
+#### Per-Class Performance (Critical for Safety)
 
-| Metric | Description | Target | Achieved |
-|--------|-------------|--------|----------|
-| **Accuracy** | Overall correct predictions | > 90% | ~94% |
-| **Precision** | Positive predictive value (weighted) | > 85% | ~93% |
-| **Recall** | True positive rate (weighted) | > 85% | ~94% |
-| **F1-Score** | Harmonic mean of precision/recall | > 85% | ~93% |
-| **CV Score** | 5-fold cross-validation mean | > 88% | ~92% |
+| Class | Samples | Correct | Precision | Recall | F1-Score |
+|-------|---------|---------|-----------|--------|----------|
+| **Safe** | 3,254 | 3,254 | 100% | 100% | 100% |
+| **Warning** | 2,960 | 2,960 | 100% | 100% | 100% |
+| **Unsafe** | 928 | 926 | 99.8% | **99.78%** | 99.8% |
+
+> **Critical Safety Insight:** The model correctly identifies 99.78% of Unsafe water conditions. The 2 misclassified Unsafe samples were predicted as Warning (not Safe), meaning no dangerous conditions were incorrectly labeled as safe. This is crucial for public health protection in IoT water monitoring systems.
 
 ---
 
@@ -375,7 +379,14 @@ The Tableau Public dashboard visualizes:
 4. **Safety Classification** - Distribution of Safe/Warning/Unsafe readings by station
 5. **Alert History** - Timeline of threshold breaches
 
-**Dashboard Link**: [Tableau Public Dashboard](https://public.tableau.com/your-dashboard-link) [AS OF NOW, THIS IS A PLACEHOLDER]
+**Dashboard Link**: [Smart Water Quality Monitoring Dashboard](https://public.tableau.com/views/SmartWaterQualityMonitoringDashboard) *(Update with actual Tableau Public link)*
+
+### Dashboard Features
+
+- **Current Status Panel** - Average turbidity (7 days), unsafe alert count
+- **Quality Status Over Time** - Historical distribution of Safe/Warning/Unsafe by year
+- **LSTM Predictions** - Actual vs predicted turbidity visualization
+- **Classification Confusion Matrix** - Model performance breakdown
 
 ---
 
@@ -388,7 +399,10 @@ The Tableau Public dashboard visualizes:
 | `lstm_daily_metrics.csv` | Daily aggregated prediction metrics |
 | `classification_results.csv` | Classification predictions with probabilities |
 | `classification_summary.csv` | Summary metrics (accuracy, precision, recall, F1) |
-| `*.png` | Visualization plots (confusion matrix, feature importance, etc.) |
+| `time_series_model_comparison.png` | R² and RMSE comparison across time series models |
+| `classification_model_comparison.png` | Accuracy comparison across classification models |
+| `per_class_performance.png` | Per-class recall analysis for safety monitoring |
+| `*.png` | Additional visualization plots |
 
 ---
 
@@ -415,4 +429,4 @@ AAI-530 Final Project Team
 
 ---
 
-*Last Updated: January 2026*
+*Last Updated: February 2026*
