@@ -379,7 +379,7 @@ The Tableau Public dashboard visualizes:
 4. **Safety Classification** - Distribution of Safe/Warning/Unsafe readings by station
 5. **Alert History** - Timeline of threshold breaches
 
-**Dashboard Link**: [Smart Water Quality Monitoring Dashboard](https://public.tableau.com/views/SmartWaterQualityMonitoringDashboard) *(Update with actual Tableau Public link)*
+**Dashboard Link**: [Smart Water Quality Monitoring Dashboard](https://public.tableau.com/views/SmartWaterQualityMonitoringDashboard/Dashboard1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 
 ### Dashboard Features
 
